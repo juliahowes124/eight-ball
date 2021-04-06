@@ -1,22 +1,45 @@
 import React, { useState } from 'react';
 
 import './EightBall.css';
+const initialCount = {
+  'green': 0,
+  'goldenrod': 0,
+  'red': 0
+}
+const initialColor =  'black';
+const initialText = 'Think of a Question';
 
 function EightBall(props) {
-  const [color, setColor] = useState('black');
-  const [text, setText] = useState('Think of a Question')
+  const [color, setColor] = useState(initialColor);
+  const [text, setText] = useState(initialText);
+  const [colorCount, setColorCount] = useState(initialCount);
 
-  function clickHandler() {
+  function ballClickHandler() {
     let {msg, color} = props.answers[Math.floor(Math.random() * props.answers.length)];
     setColor(color);
     setText(msg);
+    setColorCount({...colorCount, [color]: colorCount[color] + 1});
+  }
+
+  function resetClickHandler() {
+    setColor(initialColor);
+    setText(initialText);
+    
+    setColorCount({...initialCount})
   }
 
   return (
-    <div className="EightBall-div"
-      style={{ backgroundColor: color }}
-      onClick={clickHandler}>
-      {text}
+    <div>
+      <div className="EightBall-div"
+        style={{ backgroundColor: color }}
+        onClick={ballClickHandler}>
+        {text}
+      </div>
+        <button onClick={ resetClickHandler }> Reset </button>
+        <ul> 
+          { Object.entries(colorCount)
+          .map(([key, value]) => <li>{key} has been shown {+value} times</li>)}
+        </ul>
     </div>
   )
 }
